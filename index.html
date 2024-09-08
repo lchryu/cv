@@ -29,6 +29,14 @@
         color: #6c757d;
       }
 
+      .profile-pic {
+        width: 150px; /* Set width */
+        height: 150px; /* Set height */
+        border-radius: 50%; /* Make the image round */
+        object-fit: cover; /* Make sure the image fits inside the circle */
+        margin-bottom: 20px;
+      }
+
       .content-section {
         margin-bottom: 40px;
       }
@@ -39,13 +47,6 @@
         color: #343a40;
         border-bottom: 2px solid #007bff;
         padding-bottom: 10px;
-      }
-
-      .skill-item,
-      .project-item,
-      .education-item,
-      .work-item {
-        margin-bottom: 20px;
       }
 
       .footer {
@@ -59,13 +60,10 @@
         text-align: center;
       }
 
-      .contact-info a {
-        margin: 0 10px;
+      .contact-info p a {
+        margin: 0 5px;
         color: #007bff;
-      }
-
-      .badge {
-        margin-right: 5px;
+        text-decoration: none;
       }
     </style>
   </head>
@@ -73,135 +71,138 @@
   <body>
     <div class="container">
       <div class="header">
+        <!-- Adding the profile picture -->
+        <img src="lch.jpg" alt="Profile Picture" class="profile-pic" />
+        
         <h1>Lương Chung Hội</h1>
         <p>Programming Tutor</p>
         <div class="contact-info">
           <p>
-            Phone: 0978259158 | Email:
-            <a href="mailto:lch.ryu2001@gmail.com">lch.ryu2001@gmail.com</a>
-          </p>
-          <a href="https://github.com/lchryu">GitHub</a>
-        </div>
-      </div>
-
-      <div class="content-section">
-        <h2 class="section-title">Introduction</h2>
-        <p>
-          I am a fourth-year student at Thuy Loi University (2020 – 2024), currently
-          focusing on both teaching programming and software development. I am
-          passionate about teaching and guiding others in programming.
-        </p>
-        <p><strong>GPA:</strong> 3.12</p>
-        <p><strong>Key Course Scores:</strong></p>
-        <ul>
-          <li>Data Structures and Algorithm: 9.2</li>
-          <li>Applied Algorithm: 9.5</li>
-          <li>Object-Oriented Programming: 9.4</li>
-        </ul>
-      </div>
-
-      <div class="content-section">
-        <h2 class="section-title">Teaching Experience</h2>
-        <div class="work-item">
-          <h5>Training a High School Student</h5>
-          <p>
-            Currently mentoring a grade 11 student to prepare for the provincial
-            excellent student exam, focusing on advanced problem-solving and algorithmic thinking.
-          </p>
-        </div>
-        <div class="work-item">
-          <h5>Private Classes for Swinburne University Students</h5>
-          <p>
-            Teaching two students from Swinburne University, providing guidance on subjects such as
-            algorithms, programming concepts, and project development.
-          </p>
-        </div>
-        <div class="work-item">
-          <h5>C++ Fundamentals and Advanced Course</h5>
-          <p>
-            Currently tutoring a first-year student majoring in Mechanical Electronics in C++
-            from basic programming to advanced topics such as memory management, object-oriented programming, and data structures.
+            Phone: 0978259158 | 
+            Email: <a href="mailto:lch.ryu2001@gmail.com">lch.ryu2001@gmail.com</a> |
+            GitHub: <a href="https://github.com/lchryu">github.com/lchryu</a>
           </p>
         </div>
       </div>
 
-      <div class="content-section">
-        <h2 class="section-title">Skills</h2>
-        <ul>
-          <li>C++, Java, C#, Python</li>
-          <li>Object-oriented programming, SOLID principles</li>
-          <li>Data Structures and Algorithms</li>
-          <li>Artificial Intelligence concepts</li>
-          <li>Version Control: GitHub</li>
-          <li>Database Management: SQL SERVER, MySQL, Firebase</li>
-        </ul>
-      </div>
-
-      <div class="content-section">
-        <h2 class="section-title">Projects</h2>
-        <div class="project-item">
-          <h5>Pixel Adventure (2D Game)</h5>
-          <p><strong>Role:</strong> Lead Developer</p>
+      <div id="cv-content">
+        <div class="content-section">
+          <h2 class="section-title">Introduction</h2>
           <p>
-            Developed an action-adventure platform game where players embark on
-            a quest to rescue the princess. Implemented gameplay mechanics,
-            enemy AI, and item collection system.
+            I am a fourth-year student at Thuy Loi University (2020 – 2024), currently
+            focusing on both teaching programming and software development. I am
+            passionate about teaching and guiding others in programming.
           </p>
-          <p><strong>Technologies:</strong> C#, Unity</p>
-          <a href="https://github.com/lch.ryu/Jack-s-Adventure">GitHub</a> |
-          <a href="https://youtu.be/GrXt-DVVDys">Demo</a>
-        </div>
-        <div class="project-item">
-          <h5>Food Order App (Mobile App)</h5>
-          <p>
-            Developed a food ordering application using Java and Firebase,
-            utilizing knowledge of OOP, MVC, etc.
-          </p>
-          <p>
-            <strong>Features:</strong> Register, login, view menu, purchase,
-            modify cart, checkout, view purchase history
-          </p>
-          <a href="https://github.com/lchryu/FoodOrderApp">GitHub</a> |
-          <a href="https://youtu.be/KesgY-3882c">Demo</a>
-        </div>
-        <div class="project-item">
-          <h5>Bomberman (2D Game)</h5>
-          <p>
-            <strong>Concept:</strong> Two characters battle with bombs and
-            supportive items to find the winner through 3 levels.
-          </p>
-          <p>
-            <strong>Role:</strong> Developed sound, scoring logic, optimized GUI
-          </p>
-          <p><strong>Team:</strong> 3 members</p>
-          <a href="https://github.com/AnhDuong1612/Bomberman">GitHub</a> |
-          <a href="https://youtu.be/xQgEU4TYoMU">Demo</a>
-        </div>
-      </div>
-
-      <div class="content-section">
-        <h2 class="section-title">Education</h2>
-        <div class="education-item">
-          <h5>Thuy Loi University (2020 - 2024)</h5>
-          <p><strong>Major:</strong> Information Technology</p>
           <p><strong>GPA:</strong> 3.12</p>
+          <p><strong>Key Course Scores:</strong></p>
+          <ul>
+            <li>Data Structures and Algorithm: 9.2</li>
+            <li>Applied Algorithm: 9.5</li>
+            <li>Object-Oriented Programming: 9.4</li>
+          </ul>
         </div>
-      </div>
 
-      <div class="content-section">
-        <h2 class="section-title">Interests</h2>
-        <ul>
-          <li>Football, sports</li>
-          <li>Exploring new technologies</li>
-          <li>Mathematics, algorithm, language</li>
-        </ul>
-      </div>
+        <div class="content-section">
+          <h2 class="section-title">Teaching Experience</h2>
+          <div class="work-item">
+            <h5>Training a High School Student</h5>
+            <p>
+              Currently mentoring a grade 11 student to prepare for the provincial
+              excellent student exam, focusing on advanced problem-solving and algorithmic thinking.
+            </p>
+          </div>
+          <div class="work-item">
+            <h5>Private Classes for Swinburne University Students</h5>
+            <p>
+              Teaching two students from Swinburne University, providing guidance on subjects such as
+              algorithms, programming concepts, and project development.
+            </p>
+          </div>
+          <div class="work-item">
+            <h5>C++ Fundamentals and Advanced Course</h5>
+            <p>
+              Currently tutoring a first-year student majoring in Mechanical Electronics in C++
+              from basic programming to advanced topics such as memory management, object-oriented programming, and data structures.
+            </p>
+          </div>
+        </div>
 
-      <div class="footer">
-        <p>© 2024 Lương Chung Hội. All rights reserved.</p>
+        <div class="content-section">
+          <h2 class="section-title">Skills</h2>
+          <ul>
+            <li>C++, Java, C#, Python</li>
+            <li>Object-oriented programming, SOLID principles</li>
+            <li>Data Structures and Algorithms</li>
+            <li>Artificial Intelligence concepts</li>
+            <li>Version Control: GitHub</li>
+            <li>Database Management: SQL SERVER, MySQL, Firebase</li>
+          </ul>
+        </div>
+
+        <div class="content-section">
+          <h2 class="section-title">Projects</h2>
+          <div class="project-item">
+            <h5>Pixel Adventure (2D Game)</h5>
+            <p><strong>Role:</strong> Lead Developer</p>
+            <p>
+              Developed an action-adventure platform game where players embark on
+              a quest to rescue the princess. Implemented gameplay mechanics,
+              enemy AI, and item collection system.
+            </p>
+            <p><strong>Technologies:</strong> C#, Unity</p>
+            <a href="https://github.com/lch.ryu/Jack-s-Adventure">GitHub</a> |
+            <a href="https://youtu.be/GrXt-DVVDys">Demo</a>
+          </div>
+          <div class="project-item">
+            <h5>Food Order App (Mobile App)</h5>
+            <p>
+              Developed a food ordering application using Java and Firebase,
+              utilizing knowledge of OOP, MVC, etc.
+            </p>
+            <p>
+              <strong>Features:</strong> Register, login, view menu, purchase,
+              modify cart, checkout, view purchase history
+            </p>
+            <a href="https://github.com/lchryu/FoodOrderApp">GitHub</a> |
+            <a href="https://youtu.be/KesgY-3882c">Demo</a>
+          </div>
+          <div class="project-item">
+            <h5>Bomberman (2D Game)</h5>
+            <p>
+              <strong>Concept:</strong> Two characters battle with bombs and
+              supportive items to find the winner through 3 levels.
+            </p>
+            <p>
+              <strong>Role:</strong> Developed sound, scoring logic, optimized GUI
+            </p>
+            <p><strong>Team:</strong> 3 members</p>
+            <a href="https://github.com/AnhDuong1612/Bomberman">GitHub</a> |
+            <a href="https://youtu.be/xQgEU4TYoMU">Demo</a>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <h2 class="section-title">Education</h2>
+          <div class="education-item">
+            <h5>Thuy Loi University (2020 - 2024)</h5>
+            <p><strong>Major:</strong> Information Technology</p>
+            <p><strong>GPA:</strong> 3.12</p>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <h2 class="section-title">Interests</h2>
+          <ul>
+            <li>Football, sports</li>
+            <li>Exploring new technologies</li>
+            <li>Mathematics, algorithm, language</li>
+          </ul>
+        </div>
+
+        <div class="footer">
+          <p>© 2024 Lương Chung Hội. All rights reserved.</p>
+        </div>
       </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
