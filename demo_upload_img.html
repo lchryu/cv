@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Upload Ảnh Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .upload-section {
+            padding: 2rem;
+        }
+
+        .image-preview {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #e9ecef;
+            margin: 0 auto 2rem;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .image-preview:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+
+        .upload-area {
+            border: 3px dashed #e9ecef;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+
+        .info-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+
+        .base64-preview {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+            word-break: break-all;
+            margin-top: 1rem;
+        }
+
+        .file-info {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .progress-container {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .size-warning {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .size-ok {
+            color: #28a745;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1><i class="fas fa-camera"></i> Demo Upload Ảnh Profile</h1>
+            <p class="mb-0">Test chức năng convert ảnh thành base64 và lưu vào JSON</p>
+        </div>
+
+        <div class="upload-section">
+            <!-- Current Image Preview -->
+            <img id="imagePreview" 
+                 src="https://via.placeholder.com/200x200/667eea/ffffff?text=Profile" 
+                 alt="Profile Preview" 
+                 class="image-preview">
+
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" class="file-input" accept="image/*">
+                <div>
+                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                    <h5>Kéo thả ảnh vào đây hoặc click để chọn</h5>
+                    <p class="text-muted">Hỗ trợ: JPG, PNG, GIF (tối đa 2MB)</p>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%"></div>
+                </div>
+                <small class="text-muted">Đang xử lý ảnh...</small>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="text-center">
+                <button class="btn btn-primary" id="saveBtn" disabled>
+                    <i class="fas fa-save"></i> Lưu Ảnh vào JSON
+                </button>
+                <button class="btn btn-secondary" onclick="clearImage()">
+                    <i class="fas fa-trash"></i> Xóa Ảnh
+                </button>
+            </div>
+
+            <!-- File Information -->
+            <div class="info-section">
+                <h5><i class="fas fa-info-circle"></i> Thông tin ảnh</h5>
+                <div id="fileInfo" class="file-info">
+                    <p class="mb-1"><strong>Chưa chọn ảnh nào</strong></p>
+                    <small class="text-muted">Chọn ảnh để xem thông tin chi tiết</small>
+                </div>
+
+                <!-- Base64 Preview -->
+                <div>
+                    <h6 class="mt-3">Base64 String (preview 500 ký tự đầu):</h6>
+                    <div id="base64Preview" class="base64-preview">
+                        Chưa có dữ liệu base64...
+                    </div>
+                </div>
+            </div>
+
+            <!-- JSON Output -->
+            <div class="info-section">
+                <h5><i class="fas fa-file-code"></i> JSON Output Demo</h5>
+                <pre id="jsonOutput" class="base64-preview">
+{
+  "personal_info": {
+    "name": "Lương Chung Hội",
+    "title": "Programming Tutor",
+    "profile_image": "chưa có ảnh...",
+    "phone": "0978259158",
+    "email": "lch.ryu2001@gmail.com"
+  }
+}</pre>
+            </div>
+
+            <!-- API Status -->
+            <div class="info-section">
+                <h5><i class="fas fa-server"></i> Kết nối API</h5>
+                <div id="apiStatus" class="text-center">
+                    <button class="btn btn-primary" onclick="testAPIConnection()">
+                        <i class="fas fa-plug"></i> Test Kết Nối API
+                    </button>
+                    <div id="apiResult" class="mt-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        let currentImageBase64 = null;
+        let currentFileInfo = null;
+
+        // File input change handler
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+        // Drag and drop handlers
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Vui lòng chọn file ảnh (JPG, PNG, GIF)');
+                return;
+            }
+
+            // Validate file size (2MB)
+            const maxSize = 2 * 1024 * 1024; // 2MB
+            if (file.size > maxSize) {
+                alert('❌ File quá lớn! Vui lòng chọn ảnh dưới 2MB');
+                return;
+            }
+
+            currentFileInfo = {
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                lastModified: new Date(file.lastModified).toLocaleString()
+            };
+
+            showProgress();
+            processImage(file);
+        }
+
+        function showProgress() {
+            document.getElementById('progressContainer').style.display = 'block';
+            
+            // Simulate progress
+            let progress = 0;
+            const progressBar = document.getElementById('progressBar');
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    hideProgress();
+                }
+                progressBar.style.width = progress + '%';
+            }, 100);
+        }
+
+        function hideProgress() {
+            setTimeout(() => {
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('progressBar').style.width = '0%';
+            }, 500);
+        }
+
+        function processImage(file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const base64String = e.target.result;
+                currentImageBase64 = base64String;
+                
+                // Update preview image
+                document.getElementById('imagePreview').src = base64String;
+                
+                // Update file info
+                updateFileInfo();
+                
+                // Update base64 preview
+                updateBase64Preview(base64String);
+                
+                // Update JSON output
+                updateJSONOutput(base64String);
+                
+                // Enable save button
+                document.getElementById('saveBtn').disabled = false;
+                
+                console.log('✅ Ảnh đã được convert thành base64');
+            };
+            
+            reader.onerror = function() {
+                alert('❌ Lỗi khi đọc file ảnh');
+                hideProgress();
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function updateFileInfo() {
+            if (!currentFileInfo) return;
+            
+            const fileSizeKB = (currentFileInfo.size / 1024).toFixed(2);
+            const fileSizeMB = (currentFileInfo.size / 1024 / 1024).toFixed(2);
+            
+            const sizeClass = currentFileInfo.size > 1024 * 1024 ? 'size-warning' : 'size-ok';
+            
+            document.getElementById('fileInfo').innerHTML = `
+                <p class="mb-1"><strong>📁 ${currentFileInfo.name}</strong></p>
+                <p class="mb-1">📏 Kích thước: <span class="${sizeClass}">${fileSizeKB} KB (${fileSizeMB} MB)</span></p>
+                <p class="mb-1">🎨 Định dạng: ${currentFileInfo.type}</p>
+                <p class="mb-0">📅 Sửa đổi: ${currentFileInfo.lastModified}</p>
+            `;
+        }
+
+        function updateBase64Preview(base64String) {
+            const preview = base64String.substring(0, 500) + '...';
+            document.getElementById('base64Preview').textContent = preview;
+        }
+
+        function updateJSONOutput(base64String) {
+            const jsonData = {
+                personal_info: {
+                    name: "Lương Chung Hội",
+                    title: "Programming Tutor", 
+                    profile_image: base64String,
+                    phone: "0978259158",
+                    email: "lch.ryu2001@gmail.com"
+                }
+            };
+            
+            // Show only first 500 chars of base64 in preview
+            const previewData = JSON.parse(JSON.stringify(jsonData));
+            if (previewData.personal_info.profile_image.length > 100) {
+                previewData.personal_info.profile_image = 
+                    previewData.personal_info.profile_image.substring(0, 100) + '...[truncated]';
+            }
+            
+            document.getElementById('jsonOutput').textContent = JSON.stringify(previewData, null, 2);
+        }
+
+        function clearImage() {
+            currentImageBase64 = null;
+            currentFileInfo = null;
+            
+            document.getElementById('imagePreview').src = 
+                'https://via.placeholder.com/200x200/667eea/ffffff?text=Profile';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('saveBtn').disabled = true;
+            
+            document.getElementById('fileInfo').innerHTML = `
+                <p class="mb-1"><strong>Chưa chọn ảnh nào</strong></p>
+                <small class="text-muted">Chọn ảnh để xem thông tin chi tiết</small>
+            `;
+            
+            document.getElementById('base64Preview').textContent = 'Chưa có dữ liệu base64...';
+            
+            updateJSONOutput('chưa có ảnh...');
+            
+            console.log('🗑️ Đã xóa ảnh');
+        }
+
+        // Save image to API (demo)
+        document.getElementById('saveBtn').addEventListener('click', async () => {
+            if (!currentImageBase64) {
+                alert('❌ Chưa chọn ảnh nào!');
+                return;
+            }
+
+            try {
+                document.getElementById('saveBtn').innerHTML = 
+                    '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+                document.getElementById('saveBtn').disabled = true;
+
+                // Simulate API call (replace with real API call)
+                await simulateAPISave();
+                
+                alert('✅ Đã lưu ảnh thành công!\nẢnh đã được convert thành base64 và có thể lưu vào JSON.');
+                
+            } catch (error) {
+                alert('❌ Lỗi khi lưu ảnh: ' + error.message);
+            } finally {
+                document.getElementById('saveBtn').innerHTML = 
+                    '<i class="fas fa-save"></i> Lưu Ảnh vào JSON';
+                document.getElementById('saveBtn').disabled = false;
+            }
+        });
+
+        async function simulateAPISave() {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            console.log('💾 Demo: Ảnh đã được "lưu" vào API');
+            console.log('📏 Kích thước base64:', currentImageBase64.length, 'ký tự');
+            
+            // In real implementation, you would call:
+            // const response = await fetch(`${API_BASE_URL}/api/personal-info`, {
+            //     method: 'PUT',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         ...personalInfo,
+            //         profile_image: currentImageBase64
+            //     })
+            // });
+        }
+
+        async function testAPIConnection() {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/`);
+                if (response.ok) {
+                    resultDiv.innerHTML = 
+                        '<div class="alert alert-success mt-2">✅ Kết nối API thành công!</div>';
+                } else {
+                    throw new Error('API không phản hồi');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = 
+                    '<div class="alert alert-danger mt-2">❌ Không thể kết nối API. Hãy chạy: <code>python main.py</code></div>';
+            }
+        }
+
+        // Initialize
+        updateJSONOutput('chưa có ảnh...');
+        
+        console.log('🎨 Demo Upload Ảnh đã sẵn sàng!');
+        console.log('📝 Hướng dẫn: Chọn ảnh để xem cách convert thành base64');
+    </script>
+</body>
+</html>
