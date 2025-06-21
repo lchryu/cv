@@ -1,0 +1,83 @@
+{
+  "personal_info": {
+    "name": "Lương Chung Hội",
+    "title": "Programming Tutor",
+    "phone": "0978259158",
+    "email": "lch.ryu2001@gmail.com",
+    "github": "https://github.com/lchryu",
+    "gpa": "3.12"
+  },
+  "introduction": "I am a fourth-year student at Thuy Loi University (2020 – 2024), currently focusing on both teaching programming and software development. I am passionate about teaching and guiding others in programming.",
+  "key_courses": [
+    {
+      "name": "Data Structures and Algorithm",
+      "score": "9.2"
+    },
+    {
+      "name": "Applied Algorithm",
+      "score": "9.6"
+    },
+    {
+      "name": "Object-Oriented Programming",
+      "score": "9.4"
+    }
+  ],
+  "teaching_experience": [
+    {
+      "title": "Training a High School Student",
+      "description": "Currently mentoring a grade 11 student to prepare for the provincial excellent student exam, focusing on advanced problem-solving and algorithmic thinking."
+    },
+    {
+      "title": "Private Classes for Swinburne University Students",
+      "description": "Teaching two students from Swinburne University, providing guidance on subjects such as algorithms, programming concepts, and project development."
+    },
+    {
+      "title": "C++ Fundamentals and Advanced Course",
+      "description": "Currently tutoring a first-year student majoring in Mechanical Electronics in C++ from basic programming to advanced topics such as memory management, object-oriented programming, and data structures."
+    }
+  ],
+  "skills": [
+    "C++, Java, C#, Python",
+    "Object-oriented programming, SOLID principles",
+    "Data Structures and Algorithms",
+    "Artificial Intelligence concepts",
+    "Version Control: GitHub",
+    "Database Management: SQL SERVER, MySQL, Firebase"
+  ],
+  "projects": [
+    {
+      "name": "Pixel Adventure (2D Game)",
+      "role": "Lead Developer",
+      "description": "Developed an action-adventure platform game where players embark on a quest to rescue the princess. Implemented gameplay mechanics, enemy AI, and item collection system.",
+      "technologies": "C#, Unity",
+      "github": "https://github.com/lch.ryu/Jack-s-Adventure",
+      "demo": "https://youtu.be/GrXt-DVVDys"
+    },
+    {
+      "name": "Food Order App (Mobile App)",
+      "role": "Developer",
+      "description": "Developed a food ordering application using Java and Firebase, utilizing knowledge of OOP, MVC, etc.",
+      "features": "Register, login, view menu, purchase, modify cart, checkout, view purchase history",
+      "github": "https://github.com/lchryu/FoodOrderApp",
+      "demo": "https://youtu.be/KesgY-3882c"
+    },
+    {
+      "name": "Bomberman (2D Game)",
+      "role": "Developed sound, scoring logic, optimized GUI",
+      "description": "Two characters battle with bombs and supportive items to find the winner through 3 levels.",
+      "team": "3 members",
+      "github": "https://github.com/AnhDuong1612/Bomberman",
+      "demo": "https://youtu.be/xQgEU4TYoMU"
+    }
+  ],
+  "education": {
+    "university": "Thuy Loi University (2020 - 2024)",
+    "major": "Information Technology",
+    "gpa": "3.12"
+  },
+  "interests": [
+    "Football, sports",
+    "Exploring new technologies",
+    "Mathematics, algorithm, language"
+  ]
+}

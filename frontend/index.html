@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CV - Lương Chung Hội</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #0066cc;
+        --secondary-color: #4a90e2;
+        --accent-color: #ff6b35;
+        --dark-color: #2c3e50;
+        --light-gray: #f8f9fa;
+        --medium-gray: #6c757d;
+        --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      * {
+        transition: all 0.3s ease;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* API Status Indicator */
+      .api-status {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        padding: 8px 15px;
+        border-radius: 20px;
+        color: white;
+        font-weight: 500;
+        font-size: 0.9rem;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .api-online { background: linear-gradient(45deg, #4CAF50, #45a049); }
+      .api-offline { background: linear-gradient(45deg, #f44336, #d32f2f); }
+      .api-loading { background: linear-gradient(45deg, #ff9800, #f57c00); }
+
+      /* Header Section */
+      .header-section {
+        background: var(--gradient-bg);
+        border-radius: 20px;
+        padding: 60px 40px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: var(--card-shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        animation: float 20s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+
+      .profile-pic {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 25px;
+        border: 6px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 2;
+        animation: profilePulse 3s ease-in-out infinite;
+      }
+
+      @keyframes profilePulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+
+      .header-section h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        color: white;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 2;
+      }
+
+      .header-section .subtitle {
+        font-size: 1.4rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 30px;
+        font-weight: 400;
+        position: relative;
+        z-index: 2;
+      }
+
+      .contact-info {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .contact-item {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        font-weight: 500;
+      }
+
+      .contact-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+        color: white;
+      }
+
+      /* Content Cards */
+      .content-card {
+        background: white;
+        border-radius: 15px;
+        padding: 35px;
+        margin-bottom: 25px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .content-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--gradient-bg);
+      }
+
+      .content-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+        color: var(--dark-color);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .section-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--gradient-bg);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+      }
+
+      /* Skills Grid */
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .skill-category {
+        background: var(--light-gray);
+        padding: 25px;
+        border-radius: 12px;
+        border-left: 4px solid var(--primary-color);
+      }
+
+      .skill-category h6 {
+        color: var(--dark-color);
+        font-weight: 600;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+      }
+
+      .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .skill-tag {
+        background: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        color: var(--dark-color);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      /* Project Cards */
+      .project-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        position: relative;
+      }
+
+      .project-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+      }
+
+      .project-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .project-type {
+        background: var(--gradient-bg);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .project-links {
+        margin-top: 15px;
+        display: flex;
+        gap: 15px;
+      }
+
+      .project-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border: 1px solid var(--primary-color);
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .project-link:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+      }
+
+      /* Experience Items */
+      .experience-item {
+        background: var(--light-gray);
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        position: relative;
+        border-left: 4px solid var(--accent-color);
+      }
+
+      .experience-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 10px;
+      }
+
+      /* GPA and Scores */
+      .score-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .score-item {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .score-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        display: block;
+      }
+
+      .score-label {
+        font-size: 0.9rem;
+        color: var(--medium-gray);
+        margin-top: 5px;
+      }
+
+      /* Interests */
+      .interests-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .interest-item {
+        background: var(--gradient-bg);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 30px;
+        background: var(--dark-color);
+        color: white;
+        border-radius: 15px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .header-section {
+          padding: 40px 20px;
+        }
+        
+        .header-section h1 {
+          font-size: 2.2rem;
+        }
+        
+        .contact-info {
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .content-card {
+          padding: 25px;
+        }
+        
+        .skills-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Animations */
+      .fade-in {
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .content-card {
+        animation: fadeIn 0.8s ease-out;
+        animation-fill-mode: both;
+      }
+
+      .content-card:nth-child(1) { animation-delay: 0.1s; }
+      .content-card:nth-child(2) { animation-delay: 0.2s; }
+      .content-card:nth-child(3) { animation-delay: 0.3s; }
+      .content-card:nth-child(4) { animation-delay: 0.4s; }
+      .content-card:nth-child(5) { animation-delay: 0.5s; }
+      .content-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+  </head>
+
+  <body>
+    <!-- API Status Indicator -->
+    <div id="apiStatus" class="api-status api-loading">
+      <i class="fas fa-circle-notch fa-spin"></i> Checking API...
+    </div>
+
+    <div class="main-container">
+      <!-- Header Section -->
+      <div class="header-section">
+        <img src="./lch.jpg" alt="Profile Picture" class="profile-pic" />
+        <h1 id="fullName">Lương Chung Hội</h1>
+        <p class="subtitle"><i class="fas fa-code"></i> <span id="jobTitle">Programming Tutor & Developer</span></p>
+        <div class="contact-info">
+          <a href="#" id="phoneLink" class="contact-item">
+            <i class="fas fa-phone"></i>
+            <span id="phoneNumber">0978259158</span>
+          </a>
+          <a href="#" id="emailLink" class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span id="emailAddress">lch.ryu2001@gmail.com</span>
+          </a>
+          <a href="#" id="githubLink" class="contact-item" target="_blank">
+            <i class="fab fa-github"></i>
+            <span id="githubText">github.com/lchryu</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Introduction Section -->
+      <div class="content-card">
+        <h2 class="section-title">
+          <div class="section-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          Introduction
+        </h2>
+        <p class="mb-4" id="introText">
+          I am a fourth-year student at Thuy Loi University (2020 – 2024), currently
+          focusing on both teaching programming and software development. I am
+          passionate about teaching and guiding others in programming, with a strong
+          foundation in algorithms and software engineering principles.
+        </p>
+        
+        <div class="score-grid" id="scoreGrid">
+          <div class="score-item">
+            <span class="score-value" id="overallGPA">3.12</span>
+            <div class="score-label">Overall GPA</div>
+          </div>
+          <div class="score-item">
+            <span class="score-value" id="dataStructuresScore">9.2</span>
+            <div class="score-label">Data Structures</div>
+          </div>
+          <div class="score-item">
+            <span class="score-value" id="algorithmScore">9.5</span>
+            <div class="score-label">Applied Algorithm</div>
+          </div>
+          <div class="score-item">
+            <span class="score-value" id="oopScore">9.4</span>
+            <div class="score-label">OOP</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Teaching Experience -->
+      <div class="content-card">
+        <h2 class="section-title">
+          <div class="section-icon">
+            <i class="fas fa-chalkboard-teacher"></i>
+          </div>
+          Teaching Experience
+        </h2>
+        
+        <div id="teachingExperience">
+          <!-- Default content will be replaced by API data -->
+          <div class="experience-item">
+            <h5 class="experience-title">
+              <i class="fas fa-medal"></i>
+              Training a High School Student
+            </h5>
+            <p>
+              Currently mentoring a grade 11 student to prepare for the provincial
+              excellent student exam, focusing on advanced problem-solving and algorithmic thinking.
+            </p>
+          </div>
+
+          <div class="experience-item">
+            <h5 class="experience-title">
+              <i class="fas fa-university"></i>
+              Private Classes for Swinburne University Students
+            </h5>
+            <p>
+              Teaching two students from Swinburne University, providing guidance on subjects such as
+              algorithms, programming concepts, and project development.
+            </p>
+          </div>
+
+          <div class="experience-item">
+            <h5 class="experience-title">
+              <i class="fas fa-laptop-code"></i>
+              C++ Fundamentals and Advanced Course
+            </h5>
+            <p>
+              Currently tutoring a first-year student majoring in Mechanical Electronics in C++
+              from basic programming to advanced topics such as memory management, object-oriented programming, and data structures.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills Section -->
+      <div class="content-card">
+        <h2 class="section-title">
+          <div class="section-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          Technical Skills
+        </h2>
+        
+        <div id="skillsContainer">
+          <!-- Will be populated by API or use default content -->
+          <div class="skills-grid">
+            <div class="skill-category">
+              <h6><i class="fas fa-code"></i> Programming Languages</h6>
+              <div class="skill-tags">
+                <span class="skill-tag">C++</span>
+                <span class="skill-tag">Java</span>
+                <span class="skill-tag">C#</span>
+                <span class="skill-tag">Python</span>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <h6><i class="fas fa-cube"></i> Programming Concepts</h6>
+              <div class="skill-tags">
+                <span class="skill-tag">OOP</span>
+                <span class="skill-tag">SOLID Principles</span>
+                <span class="skill-tag">Data Structures</span>
+                <span class="skill-tag">Algorithms</span>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <h6><i class="fas fa-database"></i> Databases & Tools</h6>
+              <div class="skill-tags">
+                <span class="skill-tag">SQL Server</span>
+                <span class="skill-tag">MySQL</span>
+                <span class="skill-tag">Firebase</span>
+                <span class="skill-tag">GitHub</span>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <h6><i class="fas fa-brain"></i> Specialized Areas</h6>
+              <div class="skill-tags">
+                <span class="skill-tag">AI Concepts</span>
+                <span class="skill-tag">Game Development</span>
+                <span class="skill-tag">Mobile Development</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects Section -->
+      <div class="content-card">
+        <h2 class="section-title">
+          <div class="section-icon">
+            <i class="fas fa-project-diagram"></i>
+          </div>
+          Featured Projects
+        </h2>
+
+        <div id="projectsContainer">
+          <!-- Default projects will be replaced by API data -->
+          <div class="project-card">
+            <div class="project-title">
+              <i class="fas fa-gamepad"></i>
+              Pixel Adventure
+              <span class="project-type">2D Game</span>
+            </div>
+            <p><strong>Role:</strong> Lead Developer</p>
+            <p>
+              Developed an action-adventure platform game where players embark on
+              a quest to rescue the princess. Implemented gameplay mechanics,
+              enemy AI, and item collection system with smooth animations and engaging user experience.
+            </p>
+            <p><strong>Technologies:</strong> C#, Unity</p>
+            <div class="project-links">
+              <a href="https://github.com/lch.ryu/Jack-s-Adventure" class="project-link" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+              <a href="https://youtu.be/GrXt-DVVDys" class="project-link" target="_blank">
+                <i class="fas fa-play"></i> Demo
+              </a>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-title">
+              <i class="fas fa-mobile-alt"></i>
+              Food Order App
+              <span class="project-type">Mobile App</span>
+            </div>
+            <p>
+              Developed a comprehensive food ordering application using Java and Firebase,
+              implementing modern software engineering principles including OOP and MVC architecture.
+            </p>
+            <p>
+              <strong>Features:</strong> User authentication, menu browsing, cart management,
+              order processing, purchase history, and real-time updates.
+            </p>
+            <div class="project-links">
+              <a href="https://github.com/lchryu/FoodOrderApp" class="project-link" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+              <a href="https://youtu.be/KesgY-3882c" class="project-link" target="_blank">
+                <i class="fas fa-play"></i> Demo
+              </a>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-title">
+              <i class="fas fa-bomb"></i>
+              Bomberman
+              <span class="project-type">2D Game</span>
+            </div>
+            <p>
+              <strong>Concept:</strong> Two characters battle with bombs and
+              supportive items to find the winner through 3 challenging levels with increasing difficulty.
+            </p>
+            <p>
+              <strong>Role:</strong> Developed sound system, scoring logic, and optimized GUI performance.
+              Collaborated in a team of 3 members using agile development practices.
+            </p>
+            <div class="project-links">
+              <a href="https://github.com/AnhDuong1612/Bomberman" class="project-link" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+              <a href="https://youtu.be/xQgEU4TYoMU" class="project-link" target="_blank">
+                <i class="fas fa-play"></i> Demo
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education Section -->
+      <div class="content-card">
+        <h2 class="section-title">
+          <div class="section-icon">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          Education
+        </h2>
+        
+        <div id="educationContainer">
+          <div class="experience-item">
+            <h5 class="experience-title">
+              <i class="fas fa-university"></i>
+              <span id="universityName">Thuy Loi University (2020 - 2024)</span>
+            </h5>
+            <p><strong>Major:</strong> <span id="majorName">Information Technology</span></p>
+            <p><strong>GPA:</strong> <span id="educationGPA">3.12/4.0</span></p>
+            <p><strong>Relevant Coursework:</strong> Data Structures & Algorithms, Object-Oriented Programming, Database Systems, Software Engineering, Artificial Intelligence</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interests Section -->
+      <div class="content-card">
+        <h2 class="section-title">
+          <div class="section-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          Interests & Hobbies
+        </h2>
+        
+        <div class="interests-list" id="interestsList">
+          <!-- Default interests will be replaced by API data -->
+          <div class="interest-item">
+            <i class="fas fa-futbol"></i>
+            Football & Sports
+          </div>
+          <div class="interest-item">
+            <i class="fas fa-laptop-code"></i>
+            New Technologies
+          </div>
+          <div class="interest-item">
+            <i class="fas fa-calculator"></i>
+            Mathematics
+          </div>
+          <div class="interest-item">
+            <i class="fas fa-code-branch"></i>
+            Algorithms
+          </div>
+          <div class="interest-item">
+            <i class="fas fa-language"></i>
+            Languages
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p><i class="fas fa-copyright"></i> 2024 <span id="footerName">Lương Chung Hội</span>. All rights reserved.</p>
+        <p style="margin-top: 10px; opacity: 0.8;">
+          <i class="fas fa-quote-left"></i>
+          "Passionate about teaching and creating innovative solutions through code"
+          <i class="fas fa-quote-right"></i>
+        </p>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // API Configuration
+      const API_BASE_URL = 'http://localhost:8000';
+      
+      // Utility function to safely set text content
+      function setTextContent(elementId, text) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.textContent = text || 'N/A';
+        }
+      }
+
+      // Check API status
+      async function checkAPIStatus() {
+        const statusElement = document.getElementById('apiStatus');
+        try {
+          const response = await fetch(`${API_BASE_URL}/`, {
+            method: 'GET',
+            mode: 'cors'
+          });
+          
+          if (response.ok) {
+            statusElement.innerHTML = '<i class="fas fa-check-circle"></i> API Connected';
+            statusElement.className = 'api-status api-online';
+            return true;
+          } else {
+            throw new Error('API not responding');
+          }
+        } catch (error) {
+          statusElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> API Offline';
+          statusElement.className = 'api-status api-offline';
+          console.warn('API Status:', error.message);
+          return false;
+        }
+      }
+
+      // Load CV data from API
+      async function loadCVData() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/cv-data`, {
+            method: 'GET',
+            mode: 'cors'
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          
+          const data = await response.json();
+          console.log('✅ Loaded CV data from API:', data);
+          updatePageContent(data);
+          
+        } catch (error) {
+          console.error('❌ Error loading CV data:', error);
+          // Keep using static content if API fails
+          document.getElementById('apiStatus').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Using Static Data';
+          document.getElementById('apiStatus').className = 'api-status api-offline';
+        }
+      }
+
+      // Update page content with API data
+      function updatePageContent(data) {
+        // Update personal info
+        if (data.personal_info) {
+          const info = data.personal_info;
+          setTextContent('fullName', info.name);
+          setTextContent('footerName', info.name);
+          setTextContent('jobTitle', info.title);
+          setTextContent('phoneNumber', info.phone);
+          setTextContent('emailAddress', info.email);
+          setTextContent('overallGPA', info.gpa);
+          
+          // Update links
+          const phoneLink = document.getElementById('phoneLink');
+          if (phoneLink && info.phone) phoneLink.href = `tel:${info.phone}`;
+          
+          const emailLink = document.getElementById('emailLink');
+          if (emailLink && info.email) emailLink.href = `mailto:${info.email}`;
+          
+        //   const githubLink = document.getElementById('githubLink');
+        //   if (githubLink && info.github) {
+        //     githubLink.href = info.github;
+        //     setTextContent('githubText', info.github.
+        // Tiếp tục từ phần updatePageContent()
+
+        const githubLink = document.getElementById('githubLink');
+          if (githubLink && info.github) {
+            githubLink.href = info.github;
+            setTextContent('githubText', info.github.replace('https://', ''));
+          }
+        }
+
+        // Update introduction
+        if (data.introduction) {
+          setTextContent('introText', data.introduction);
+        }
+
+        // Update key courses scores
+        if (data.key_courses && Array.isArray(data.key_courses)) {
+          data.key_courses.forEach(course => {
+            switch(course.name) {
+              case 'Data Structures and Algorithm':
+                setTextContent('dataStructuresScore', course.score);
+                break;
+              case 'Applied Algorithm':
+                setTextContent('algorithmScore', course.score);
+                break;
+              case 'Object-Oriented Programming':
+                setTextContent('oopScore', course.score);
+                break;
+            }
+          });
+        }
+
+        // Update teaching experience
+        if (data.teaching_experience && Array.isArray(data.teaching_experience)) {
+          const experienceContainer = document.getElementById('teachingExperience');
+          if (experienceContainer) {
+            experienceContainer.innerHTML = '';
+            
+            const icons = ['fas fa-medal', 'fas fa-university', 'fas fa-laptop-code', 'fas fa-chalkboard-teacher'];
+            
+            data.teaching_experience.forEach((exp, index) => {
+              const expDiv = document.createElement('div');
+              expDiv.className = 'experience-item';
+              expDiv.innerHTML = `
+                <h5 class="experience-title">
+                  <i class="${icons[index] || 'fas fa-chalkboard-teacher'}"></i>
+                  ${exp.title}
+                </h5>
+                <p>${exp.description}</p>
+              `;
+              experienceContainer.appendChild(expDiv);
+            });
+          }
+        }
+
+        // Update skills
+        if (data.skills && Array.isArray(data.skills)) {
+          const skillsContainer = document.getElementById('skillsContainer');
+          if (skillsContainer) {
+            // Create a simple list view for skills from API
+            skillsContainer.innerHTML = `
+              <div class="skill-category">
+                <h6><i class="fas fa-tools"></i> All Skills</h6>
+                <div class="skill-tags">
+                  ${data.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        // Update projects
+        if (data.projects && Array.isArray(data.projects)) {
+          const projectsContainer = document.getElementById('projectsContainer');
+          if (projectsContainer) {
+            projectsContainer.innerHTML = '';
+            
+            const projectIcons = {
+              'game': 'fas fa-gamepad',
+              'mobile': 'fas fa-mobile-alt',
+              'web': 'fas fa-globe',
+              'desktop': 'fas fa-desktop',
+              'default': 'fas fa-code'
+            };
+            
+            data.projects.forEach(project => {
+              const projectDiv = document.createElement('div');
+              projectDiv.className = 'project-card';
+              
+              // Determine project type and icon
+              let projectType = 'Project';
+              let iconClass = projectIcons.default;
+              
+              if (project.name.toLowerCase().includes('game')) {
+                projectType = '2D Game';
+                iconClass = projectIcons.game;
+              } else if (project.name.toLowerCase().includes('app')) {
+                projectType = 'Mobile App';
+                iconClass = projectIcons.mobile;
+              } else if (project.name.toLowerCase().includes('web')) {
+                projectType = 'Web App';
+                iconClass = projectIcons.web;
+              }
+              
+              let projectHTML = `
+                <div class="project-title">
+                  <i class="${iconClass}"></i>
+                  ${project.name}
+                  <span class="project-type">${projectType}</span>
+                </div>
+              `;
+              
+              if (project.role) {
+                projectHTML += `<p><strong>Role:</strong> ${project.role}</p>`;
+              }
+              
+              projectHTML += `<p>${project.description}</p>`;
+              
+              if (project.technologies) {
+                projectHTML += `<p><strong>Technologies:</strong> ${project.technologies}</p>`;
+              }
+              
+              if (project.features) {
+                projectHTML += `<p><strong>Features:</strong> ${project.features}</p>`;
+              }
+              
+              if (project.team) {
+                projectHTML += `<p><strong>Team:</strong> ${project.team}</p>`;
+              }
+              
+              // Add project links
+              let links = [];
+              if (project.github) {
+                links.push(`<a href="${project.github}" class="project-link" target="_blank">
+                  <i class="fab fa-github"></i> GitHub
+                </a>`);
+              }
+              if (project.demo) {
+                links.push(`<a href="${project.demo}" class="project-link" target="_blank">
+                  <i class="fas fa-play"></i> Demo
+                </a>`);
+              }
+              
+              if (links.length > 0) {
+                projectHTML += `<div class="project-links">${links.join('')}</div>`;
+              }
+              
+              projectDiv.innerHTML = projectHTML;
+              projectsContainer.appendChild(projectDiv);
+            });
+          }
+        }
+
+        // Update education
+        if (data.education) {
+          setTextContent('universityName', data.education.university);
+          setTextContent('majorName', data.education.major);
+          setTextContent('educationGPA', `${data.education.gpa}/4.0`);
+        }
+
+        // Update interests
+        if (data.interests && Array.isArray(data.interests)) {
+          const interestsList = document.getElementById('interestsList');
+          if (interestsList) {
+            interestsList.innerHTML = '';
+            
+            const interestIcons = {
+              'football': 'fas fa-futbol',
+              'sport': 'fas fa-running',
+              'technology': 'fas fa-laptop-code',
+              'math': 'fas fa-calculator',
+              'algorithm': 'fas fa-code-branch',
+              'language': 'fas fa-language',
+              'music': 'fas fa-music',
+              'reading': 'fas fa-book',
+              'travel': 'fas fa-plane',
+              'default': 'fas fa-heart'
+            };
+            
+            data.interests.forEach(interest => {
+              const interestDiv = document.createElement('div');
+              interestDiv.className = 'interest-item';
+              
+              // Try to find appropriate icon
+              let iconClass = interestIcons.default;
+              const lowerInterest = interest.toLowerCase();
+              
+              for (const [key, icon] of Object.entries(interestIcons)) {
+                if (lowerInterest.includes(key)) {
+                  iconClass = icon;
+                  break;
+                }
+              }
+              
+              interestDiv.innerHTML = `
+                <i class="${iconClass}"></i>
+                ${interest}
+              `;
+              interestsList.appendChild(interestDiv);
+            });
+          }
+        }
+
+        console.log('✅ Page content updated successfully!');
+      }
+
+      // Initialize when page loads
+      document.addEventListener('DOMContentLoaded', async () => {
+        console.log('🚀 CV Page loaded, initializing...');
+        
+        // Check API status
+        const apiOnline = await checkAPIStatus();
+        
+        if (apiOnline) {
+          console.log('📡 API is online, loading data...');
+          await loadCVData();
+        } else {
+          console.log('📄 API is offline, using static content');
+          // Static content is already in HTML, so no action needed
+        }
+        
+        // Hide the API status indicator after 3 seconds if successful
+        if (apiOnline) {
+          setTimeout(() => {
+            const statusElement = document.getElementById('apiStatus');
+            if (statusElement) {
+              statusElement.style.opacity = '0';
+              setTimeout(() => {
+                statusElement.style.display = 'none';
+              }, 300);
+            }
+          }, 3000);
+        }
+      });
+
+      // Add a refresh data function (useful for testing)
+      window.refreshCVData = async () => {
+        console.log('🔄 Refreshing CV data...');
+        const apiOnline = await checkAPIStatus();
+        if (apiOnline) {
+          await loadCVData();
+        }
+      };
+
+      // Add error handling for fetch requests
+      window.addEventListener('unhandledrejection', (event) => {
+        if (event.reason && event.reason.message && event.reason.message.includes('fetch')) {
+          console.warn('Network error detected, using static content');
+          event.preventDefault(); // Prevent the error from appearing in console
+        }
+      });
+    </script>
+  </body>
+</html>

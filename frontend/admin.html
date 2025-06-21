@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Admin Panel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --secondary-color: #4a90e2;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --dark-color: #2c3e50;
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .admin-card .card-header {
+            background: linear-gradient(45deg, var(--light-gray), #e9ecef);
+            border-bottom: 3px solid var(--primary-color);
+            padding: 1.5rem;
+        }
+
+        .admin-card .card-header h4 {
+            margin: 0;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-card .card-body {
+            padding: 2rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, var(--success-color), #20c997);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger-color), #e74c3c);
+            border: none;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+            border: none;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .api-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .api-online { background: linear-gradient(45deg, var(--success-color), #20c997); }
+        .api-offline { background: linear-gradient(45deg, var(--danger-color), #e74c3c); }
+        .api-loading { background: linear-gradient(45deg, var(--warning-color), #fd7e14); }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 1rem 1.5rem;
+        }
+
+        .dynamic-item {
+            background: var(--light-gray);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .dynamic-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .item-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .loading-spinner {
+            display: none;
+            color: var(--primary-color);
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .admin-card .card-body {
+                padding: 1rem;
+            }
+            
+            .btn-primary, .btn-success {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- API Status -->
+    <div id="apiStatus" class="api-status api-loading">
+        <i class="fas fa-circle-notch fa-spin"></i> Checking API...
+    </div>
+
+    <!-- Header -->
+    <div class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-cogs"></i> CV Admin Panel</h1>
+                    <p class="mb-0">Manage your CV content dynamically</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light" onclick="loadCurrentData()">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                    <a href="index.html" class="btn btn-outline-light ms-2" target="_blank">
+                        <i class="fas fa-eye"></i> View CV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Personal Information -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-user"></i> Personal Information</h4>
+            </div>
+            <div class="card-body">
+                <form id="personalInfoForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-control" id="title" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control" id="phone" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">GitHub URL</label>
+                                <input type="url" class="form-control" id="github" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">GPA</label>
+                                <input type="text" class="form-control" id="gpa" placeholder="3.12">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="loading-spinner" id="personalLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-save"></i> Update Personal Info
+                    </button>
+                </form>
+                <div id="personalResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-file-alt"></i> Introduction</h4>
+            </div>
+            <div class="card-body">
+                <form id="introductionForm">
+                    <div class="mb-3">
+                        <label class="form-label">Introduction Text</label>
+                        <textarea class="form-control" id="introduction" rows="6" required></textarea>
+                        <div class="form-text">Write a compelling introduction about yourself</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="loading-spinner" id="introLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-save"></i> Update Introduction
+                    </button>
+                </form>
+                <div id="introResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Key Courses -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-graduation-cap"></i> Key Course Scores</h4>
+            </div>
+            <div class="card-body">
+                <form id="keyCoursesForm">
+                    <div id="coursesContainer">
+                        <!-- Courses will be loaded here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary mb-3" onclick="addCourse()">
+                        <i class="fas fa-plus"></i> Add Course
+                    </button>
+                    <br>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="loading-spinner" id="coursesLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-save"></i> Update Courses
+                    </button>
+                </form>
+                <div id="coursesResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Teaching Experience -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-chalkboard-teacher"></i> Teaching Experience</h4>
+            </div>
+            <div class="card-body">
+                <form id="teachingForm">
+                    <div id="teachingContainer">
+                        <!-- Teaching experience will be loaded here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary mb-3" onclick="addTeachingExperience()">
+                        <i class="fas fa-plus"></i> Add Experience
+                    </button>
+                    <br>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="loading-spinner" id="teachingLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-save"></i> Update Teaching Experience
+                    </button>
+                </form>
+                <div id="teachingResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-cogs"></i> Skills</h4>
+            </div>
+            <div class="card-body">
+                <form id="skillsForm">
+                    <div id="skillsContainer">
+                        <!-- Skills will be loaded here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary mb-3" onclick="addSkill()">
+                        <i class="fas fa-plus"></i> Add Skill
+                    </button>
+                    <br>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="loading-spinner" id="skillsLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-save"></i> Update Skills
+                    </button>
+                </form>
+                <div id="skillsResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-project-diagram"></i> Projects</h4>
+            </div>
+            <div class="card-body">
+                <form id="projectsForm">
+                    <div id="projectsContainer">
+                        <!-- Projects will be loaded here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary mb-3" onclick="addProject()">
+                        <i class="fas fa-plus"></i> Add Project
+                    </button>
+                    <br>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="loading-spinner" id="projectsLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-save"></i> Update Projects
+                    </button>
+                </form>
+                <div id="projectsResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-university"></i> Education</h4>
+            </div>
+            <div class="card-body">
+                <form id="educationForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">University</label>
+                                <input type="text" class="form-control" id="university" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Major</label>
+                                <input type="text" class="form-control" id="major" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">GPA</label>
+                                <input type="text" class="form-control" id="educationGPA" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="loading-spinner" id="educationLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-save"></i> Update Education
+                    </button>
+                </form>
+                <div id="educationResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Interests -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-heart"></i> Interests & Hobbies</h4>
+            </div>
+            <div class="card-body">
+                <form id="interestsForm">
+                    <div id="interestsContainer">
+                        <!-- Interests will be loaded here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary mb-3" onclick="addInterest()">
+                        <i class="fas fa-plus"></i> Add Interest
+                    </button>
+                    <br>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="loading-spinner" id="interestsLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-save"></i> Update Interests
+                    </button>
+                </form>
+                <div id="interestsResult" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Data Preview -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h4><i class="fas fa-eye"></i> Current Data Preview</h4>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-success mb-3" onclick="showDataPreview()">
+                    <i class="fas fa-sync-alt"></i> Load Current Data
+                </button>
+                <pre id="dataPreview" class="preview-section">Click "Load Current Data" to see the current CV data...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:8000';
+
+        // Utility functions
+        function showLoading(loadingId) {
+            document.getElementById(loadingId).style.display = 'inline';
+        }
+
+        function hideLoading(loadingId) {
+            document.getElementById(loadingId).style.display = 'none';
+        }
+
+        function showResult(resultId, message, isSuccess = true) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.innerHTML = `
+                <div class="alert alert-${isSuccess ? 'success' : 'danger'}" role="alert">
+                    <i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                resultDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Check API status
+        async function checkAPIStatus() {
+            const statusElement = document.getElementById('apiStatus');
+            try {
+                const response = await fetch(`${API_BASE_URL}/`);
+                if (response.ok) {
+                    statusElement.innerHTML = '<i class="fas fa-check-circle"></i> API Connected';
+                    statusElement.className = 'api-status api-online';
+                    return true;
+                }
+            } catch (error) {
+                statusElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> API Offline';
+                statusElement.className = 'api-status api-offline';
+                return false;
+            }
+        }
+
+        // Load current data
+        async function loadCurrentData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/cv-data`);
+                if (!response.ok) throw new Error('Failed to load data');
+                
+                const data = await response.json();
+                populateFormData(data);
+                console.log('✅ Data loaded successfully');
+                
+            } catch (error) {
+                console.error('❌ Error loading data:', error);
+                alert('Error loading current data. Please check if the API is running.');
+            }
+        }
+
+        // Populate form data
+        function populateFormData(data) {
+            // Personal Info
+            if (data.personal_info) {
+                document.getElementById('name').value = data.personal_info.name || '';
+                document.getElementById('title').value = data.personal_info.title || '';
+                document.getElementById('phone').value = data.personal_info.phone || '';
+                document.getElementById('email').value = data.personal_info.email || '';
+                document.getElementById('github').value = data.personal_info.github || '';
+                document.getElementById('gpa').value = data.personal_info.gpa || '';
+            }
+
+            // Introduction
+            if (data.introduction) {
+                document.getElementById('introduction').value = data.introduction;
+            }
+
+            // Key Courses
+            if (data.key_courses) {
+                loadCourses(data.key_courses);
+            }
+
+            // Teaching Experience
+            if (data.teaching_experience) {
+                loadTeachingExperience(data.teaching_experience);
+            }
+
+            // Skills
+            if (data.skills) {
+                loadSkills(data.skills);
+            }
+
+            // Projects
+            if (data.projects) {
+                loadProjects(data.projects);
+            }
+
+            // Education
+            if (data.education) {
+                document.getElementById('university').value = data.education.university || '';
+                document.getElementById('major').value = data.education.major || '';
+                document.getElementById('educationGPA').value = data.education.gpa || '';
+            }
+
+            // Interests
+            if (data.interests) {
+                loadInterests(data.interests);
+            }
+        }
+
+        // Load courses
+        function loadCourses(courses) {
+            const container = document.getElementById('coursesContainer');
+            container.innerHTML = '';
+            courses.forEach((course, index) => {
+                addCourse(course.name, course.score);
+            });
+        }
+
+        // Add course
+        function addCourse(name = '', score = '') {
+            const container = document.getElementById('coursesContainer');
+            const courseDiv = document.createElement('div');
+            courseDiv.className = 'dynamic-item';
+            courseDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control course-name" placeholder="Course Name" value="${name}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control course-score" placeholder="Score" value="${score}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="item-controls">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(courseDiv);
+        }
+
+        // Load teaching experience
+        function loadTeachingExperience(experiences) {
+            const container = document.getElementById('teachingContainer');
+            container.innerHTML = '';
+            experiences.forEach((exp, index) => {
+                addTeachingExperience(exp.title, exp.description);
+            });
+        }
+
+        // Add teaching experience
+        function addTeachingExperience(title = '', description = '') {
+            const container = document.getElementById('teachingContainer');
+            const expDiv = document.createElement('div');
+            expDiv.className = 'dynamic-item';
+            expDiv.innerHTML = `
+                <div class="mb-3">
+                    <input type="text" class="form-control teaching-title" placeholder="Experience Title" value="${title}" required>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control teaching-description" rows="3" placeholder="Description" required>${description}</textarea>
+                </div>
+                <div class="item-controls">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+            container.appendChild(expDiv);
+        }
+
+        // Load skills
+        function loadSkills(skills) {
+            const container = document.getElementById('skillsContainer');
+            container.innerHTML = '';
+            skills.forEach((skill, index) => {
+                addSkill(skill);
+            });
+        }
+
+        // Add skill
+        function addSkill(skill = '') {
+            const container = document.getElementById('skillsContainer');
+            const skillDiv = document.createElement('div');
+            skillDiv.className = 'dynamic-item';
+            skillDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control skill-item" placeholder="Skill" value="${skill}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="item-controls">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(skillDiv);
+        }
+
+        // Load projects
+        function loadProjects(projects) {
+            const container = document.getElementById('projectsContainer');
+            container.innerHTML = '';
+            projects.forEach((project, index) => {
+                addProject(project);
+            });
+        }
+
+        // Add project
+        function addProject(project = {}) {
+            const container = document.getElementById('projectsContainer');
+            const projectDiv = document.createElement('div');
+            projectDiv.className = 'dynamic-item';
+            projectDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <input type="text" class="form-control project-name" placeholder="Project Name" value="${project.name || ''}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <input type="text" class="form-control project-role" placeholder="Your Role" value="${project.role || ''}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control project-description" rows="3" placeholder="Project Description" required>${project.description || ''}</textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <input type="text" class="form-control project-technologies" placeholder="Technologies Used" value="${project.technologies || ''}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <input type="text" class="form-control project-features" placeholder="Key Features" value="${project.features || ''}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <input type="text" class="form-control project-team" placeholder="Team Size" value="${project.team || ''}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <input type="url" class="form-control project-github" placeholder="GitHub URL" value="${project.github || ''}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <input type="url" class="form-control project-demo" placeholder="Demo URL" value="${project.demo || ''}">
+                        </div>
+                    </div>
+                </div>
+                <div class="item-controls">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-trash"></i> Remove Project
+                    </button>
+                </div>
+            `;
+            container.appendChild(projectDiv);
+        }
+
+        // Load interests
+        function loadInterests(interests) {
+            const container = document.getElementById('interestsContainer');
+            container.innerHTML = '';
+            interests.forEach((interest, index) => {
+                addInterest(interest);
+            });
+        }
+
+        // Add interest
+        function addInterest(interest = '') {
+            const container = document.getElementById('interestsContainer');
+            const interestDiv = document.createElement('div');
+            interestDiv.className = 'dynamic-item';
+            interestDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control interest-item" placeholder="Interest/Hobby" value="${interest}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="item-controls">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(interestDiv);
+        }
+
+        // Show data preview
+        // async function showDataPreview() {
+        //     try {
+        //         const response = await fetch(`${API_BASE_URL}/api/cv-data`);
+        //         const data = await response.json();
+        //         document.getElementById('dataPreview').textContent = JSON.stringify(data, null, 2);
+        //     } catch (error) {
+        //         document.getElementByI
+        // Show data preview (tiếp theo)
+        async function showDataPreview() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/cv-data`);
+                const data = await response.json();
+                document.getElementById('dataPreview').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('dataPreview').textContent = `Error loading data: ${error.message}`;
+            }
+        }
+
+        // Form submission handlers
+        document.getElementById('personalInfoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading('personalLoading');
+            
+            try {
+                const personalInfo = {
+                    name: document.getElementById('name').value,
+                    title: document.getElementById('title').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    github: document.getElementById('github').value,
+                    gpa: document.getElementById('gpa').value
+                };
+                
+                const response = await fetch(`${API_BASE_URL}/api/personal-info`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(personalInfo)
+                });
+                
+                if (response.ok) {
+                    showResult('personalResult', 'Personal information updated successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('personalResult', `Error: ${error.detail}`, false);
+                }
+            } catch (error) {
+                showResult('personalResult', `Error: ${error.message}`, false);
+            } finally {
+                hideLoading('personalLoading');
+            }
+        });
+
+        document.getElementById('introductionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading('introLoading');
+            
+            try {
+                const introduction = {
+                    text: document.getElementById('introduction').value
+                };
+                
+                const response = await fetch(`${API_BASE_URL}/api/introduction`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(introduction)
+                });
+                
+                if (response.ok) {
+                    showResult('introResult', 'Introduction updated successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('introResult', `Error: ${error.detail}`, false);
+                }
+            } catch (error) {
+                showResult('introResult', `Error: ${error.message}`, false);
+            } finally {
+                hideLoading('introLoading');
+            }
+        });
+
+        document.getElementById('keyCoursesForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading('coursesLoading');
+            
+            try {
+                const courses = [];
+                document.querySelectorAll('#coursesContainer .dynamic-item').forEach(item => {
+                    const name = item.querySelector('.course-name').value;
+                    const score = item.querySelector('.course-score').value;
+                    if (name && score) {
+                        courses.push({ name, score });
+                    }
+                });
+                
+                const response = await fetch(`${API_BASE_URL}/api/key-courses`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(courses)
+                });
+                
+                if (response.ok) {
+                    showResult('coursesResult', 'Key courses updated successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('coursesResult', `Error: ${error.detail}`, false);
+                }
+            } catch (error) {
+                showResult('coursesResult', `Error: ${error.message}`, false);
+            } finally {
+                hideLoading('coursesLoading');
+            }
+        });
+
+        document.getElementById('teachingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading('teachingLoading');
+            
+            try {
+                const experiences = [];
+                document.querySelectorAll('#teachingContainer .dynamic-item').forEach(item => {
+                    const title = item.querySelector('.teaching-title').value;
+                    const description = item.querySelector('.teaching-description').value;
+                    if (title && description) {
+                        experiences.push({ title, description });
+                    }
+                });
+                
+                const response = await fetch(`${API_BASE_URL}/api/teaching-experience`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(experiences)
+                });
+                
+                if (response.ok) {
+                    showResult('teachingResult', 'Teaching experience updated successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('teachingResult', `Error: ${error.detail}`, false);
+                }
+            } catch (error) {
+                showResult('teachingResult', `Error: ${error.message}`, false);
+            } finally {
+                hideLoading('teachingLoading');
+            }
+        });
+
+        document.getElementById('skillsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading('skillsLoading');
+            
+            try {
+                const skills = [];
+                document.querySelectorAll('#skillsContainer .skill-item').forEach(input => {
+                    if (input.value.trim()) {
+                        skills.push(input.value.trim());
+                    }
+                });
+                
+                const response = await fetch(`${API_BASE_URL}/api/skills`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ skills })
+                });
+                
+                if (response.ok) {
+                    showResult('skillsResult', 'Skills updated successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('skillsResult', `Error: ${error.detail}`, false);
+                }
+            } catch (error) {
+                showResult('skillsResult', `Error: ${error.message}`, false);
+            } finally {
+                hideLoading('skillsLoading');
+            }
+        });
+
+        document.getElementById('projectsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading('projectsLoading');
+            
+            try {
+                const projects = [];
+                document.querySelectorAll('#projectsContainer .dynamic-item').forEach(item => {
+                    const name = item.querySelector('.project-name').value;
+                    const role = item.querySelector('.project-role').value;
+                    const description = item.querySelector('.project-description').value;
+                    const technologies = item.querySelector('.project-technologies').value;
+                    const features = item.querySelector('.project-features').value;
+                    const team = item.querySelector('.project-team').value;
+                    const github = item.querySelector('.project-github').value;
+                    const demo = item.querySelector('.project-demo').value;
+                    
+                    if (name && role && description) {
+                        projects.push({
+                            name, role, description, technologies, features, team, github, demo
+                        });
+                    }
+                });
+                
+                const response = await fetch(`${API_BASE_URL}/api/projects`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(projects)
+                });
+                
+                if (response.ok) {
+                    showResult('projectsResult', 'Projects updated successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('projectsResult', `Error: ${error.detail}`, false);
+                }
+            } catch (error) {
+                showResult('projectsResult', `Error: ${error.message}`, false);
+            } finally {
+                hideLoading('projectsLoading');
+            }
+        });
+
+        document.getElementById('educationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading('educationLoading');
+            
+            try {
+                const education = {
+                    university: document.getElementById('university').value,
+                    major: document.getElementById('major').value,
+                    gpa: document.getElementById('educationGPA').value
+                };
+                
+                const response = await fetch(`${API_BASE_URL}/api/education`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(education)
+                });
+                
+                if (response.ok) {
+                    showResult('educationResult', 'Education updated successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('educationResult', `Error: ${error.detail}`, false);
+                }
+            } catch (error) {
+                showResult('educationResult', `Error: ${error.message}`, false);
+            } finally {
+                hideLoading('educationLoading');
+            }
+        });
+
+        document.getElementById('interestsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading('interestsLoading');
+            
+            try {
+                const interests = [];
+                document.querySelectorAll('#interestsContainer .interest-item').forEach(input => {
+                    if (input.value.trim()) {
+                        interests.push(input.value.trim());
+                    }
+                });
+                
+                const response = await fetch(`${API_BASE_URL}/api/interests`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ interests })
+                });
+                
+                if (response.ok) {
+                    showResult('interestsResult', 'Interests updated successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('interestsResult', `Error: ${error.detail}`, false);
+                }
+            } catch (error) {
+                showResult('interestsResult', `Error: ${error.message}`, false);
+            } finally {
+                hideLoading('interestsLoading');
+            }
+        });
+
+        // Initialize admin panel
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🔧 Admin Panel loaded');
+            
+            // Check API status
+            const apiOnline = await checkAPIStatus();
+            
+            if (apiOnline) {
+                console.log('📡 API is online, loading current data...');
+                await loadCurrentData();
+                
+                // Add some default items if empty
+                if (document.querySelectorAll('#coursesContainer .dynamic-item').length === 0) {
+                    addCourse();
+                }
+                if (document.querySelectorAll('#teachingContainer .dynamic-item').length === 0) {
+                    addTeachingExperience();
+                }
+                if (document.querySelectorAll('#skillsContainer .dynamic-item').length === 0) {
+                    addSkill();
+                }
+                if (document.querySelectorAll('#projectsContainer .dynamic-item').length === 0) {
+                    addProject();
+                }
+                if (document.querySelectorAll('#interestsContainer .dynamic-item').length === 0) {
+                    addInterest();
+                }
+            } else {
+                console.log('❌ API is offline');
+                alert('⚠️ Cannot connect to API. Please make sure the backend server is running on http://localhost:8000');
+            }
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + S to save current form
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                
+                // Find the active form section and submit it
+                const activeElement = document.activeElement;
+                const form = activeElement.closest('form');
+                if (form) {
+                    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                }
+            }
+            
+            // Ctrl/Cmd + R to refresh data
+            if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                e.preventDefault();
+                loadCurrentData();
+            }
+        });
+
+        // Add auto-save functionality (optional)
+        let autoSaveTimeout;
+        function setupAutoSave() {
+            document.querySelectorAll('input, textarea').forEach(element => {
+                element.addEventListener('input', () => {
+                    clearTimeout(autoSaveTimeout);
+                    autoSaveTimeout = setTimeout(() => {
+                        console.log('💾 Auto-save triggered');
+                        // You can implement auto-save logic here
+                    }, 5000); // Auto-save after 5 seconds of inactivity
+                });
+            });
+        }
+
+        // Call setupAutoSave after page loads
+        setTimeout(setupAutoSave, 1000);
+    </script>
+</body>
+</html>
