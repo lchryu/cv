@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List, Dict, Any
+from pydantic import BaseModel, Field
+from typing import List, Dict, Any, Optional
 import json
 import os
 
@@ -40,6 +40,7 @@ class PersonalInfo(BaseModel):
     email: str
     github: str
     gpa: str
+    profile_image: str = ""
 
 class KeyCourse(BaseModel):
     name: str
@@ -67,7 +68,11 @@ class Education(BaseModel):
 # API Endpoints
 @app.get("/")
 async def root():
-    return {"message": "CV Admin API is running!"}
+    return {"message": "CV Admin API is running!", "version": "1.0.1", "features": ["profile_image_support"]}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "profile_image_support": True}
 
 @app.get("/api/cv-data")
 async def get_cv_data():
@@ -76,11 +81,68 @@ async def get_cv_data():
 
 @app.put("/api/personal-info")
 async def update_personal_info(personal_info: PersonalInfo):
-    """Update personal information"""
-    data = load_data()
-    data["personal_info"] = personal_info.dict()
-    save_data(data)
-    return {"message": "Personal info updated successfully"}
+    """Update personal information including profile image"""
+    try:
+        data = load_data()
+        personal_dict = personal_info.dict()
+        
+        # Log for debugging
+        if personal_dict.get('profile_image'):
+            print(f"📸 Received profile image: {len(personal_dict['profile_image'])} characters")
+        
+        data["personal_info"] = personal_dict
+        save_data(data)
+        
+        return {
+            "message": "Personal info updated successfully", 
+            "profile_image_updated": bool(personal_dict.get('profile_image'))
+        }
+    except Exception as e:
+        print(f"❌ Error updating personal info: {e}")
+        raise HTTPException(status_code=500, detail=f"Error updating personal info: {str(e)}")
+
+@app.put("/api/profile-image")
+async def update_profile_image(image_data: dict):
+    """Update only profile image"""
+    try:
+        if "profile_image" not in image_data:
+            raise HTTPException(status_code=400, detail="Missing profile_image field")
+        
+        data = load_data()
+        if "personal_info" not in data:
+            data["personal_info"] = {}
+            
+        data["personal_info"]["profile_image"] = image_data["profile_image"]
+        save_data(data)
+        
+        print(f"📸 Profile image updated: {len(image_data['profile_image'])} characters")
+        
+        return {
+            "message": "Profile image updated successfully",
+            "image_size": len(image_data["profile_image"])
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Error updating profile image: {e}")
+        raise HTTPException(status_code=500, detail=f"Error updating profile image: {str(e)}")
+
+@app.delete("/api/profile-image")
+async def delete_profile_image():
+    """Delete profile image"""
+    try:
+        data = load_data()
+        if "personal_info" in data and "profile_image" in data["personal_info"]:
+            del data["personal_info"]["profile_image"]
+            save_data(data)
+            return {"message": "Profile image deleted successfully"}
+        else:
+            raise HTTPException(status_code=404, detail="No profile image found")
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Error deleting profile image: {e}")
+        raise HTTPException(status_code=500, detail=f"Error deleting profile image: {str(e)}")
 
 @app.put("/api/introduction")
 async def update_introduction(introduction: dict):
@@ -137,10 +199,6 @@ async def update_interests(interests: List[str]):
     data["interests"] = interests
     save_data(data)
     return {"message": "Interests updated successfully"}
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
 
 if __name__ == "__main__":
     import uvicorn

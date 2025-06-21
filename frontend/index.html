@@ -819,6 +819,15 @@
           setTextContent('emailAddress', info.email);
           setTextContent('overallGPA', info.gpa);
           
+          // Update profile image - THÊM PHẦN NÀY
+          if (info.profile_image) {
+            const profilePic = document.querySelector('.profile-pic');
+            if (profilePic) {
+              profilePic.src = info.profile_image;
+              console.log('📸 Profile image updated from API');
+            }
+          }
+          
           // Update links
           const phoneLink = document.getElementById('phoneLink');
           if (phoneLink && info.phone) phoneLink.href = `tel:${info.phone}`;
@@ -826,13 +835,7 @@
           const emailLink = document.getElementById('emailLink');
           if (emailLink && info.email) emailLink.href = `mailto:${info.email}`;
           
-        //   const githubLink = document.getElementById('githubLink');
-        //   if (githubLink && info.github) {
-        //     githubLink.href = info.github;
-        //     setTextContent('githubText', info.github.
-        // Tiếp tục từ phần updatePageContent()
-
-        const githubLink = document.getElementById('githubLink');
+          const githubLink = document.getElementById('githubLink');
           if (githubLink && info.github) {
             githubLink.href = info.github;
             setTextContent('githubText', info.github.replace('https://', ''));
