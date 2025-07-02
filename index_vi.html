@@ -456,10 +456,102 @@
       .content-card:nth-child(6) {
         animation-delay: 0.6s;
       }
+
+      .lang-toggle-switch {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1100;
+        user-select: none;
+      }
+
+      .lang-toggle-switch input[type="checkbox"] {
+        display: none;
+      }
+
+      .lang-toggle-switch label {
+        display: flex;
+        align-items: center;
+        background: var(--gradient-bg);
+        border-radius: 30px;
+        padding: 6px 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        cursor: pointer;
+        gap: 10px;
+        min-width: 110px;
+        position: relative;
+      }
+
+      .lang-toggle-switch .lang {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #fff;
+        transition: color 0.3s;
+        min-width: 40px;
+        text-align: center;
+      }
+
+      .lang-toggle-switch .toggle {
+        width: 38px;
+        height: 24px;
+        background: #fff;
+        border-radius: 20px;
+        margin: 0 8px;
+        position: relative;
+        transition: background 0.3s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      }
+
+      .lang-toggle-switch .toggle::before {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 18px;
+        height: 18px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        transition: transform 0.3s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      }
+
+      .lang-toggle-switch input[type="checkbox"]:checked + label .toggle::before {
+        transform: translateX(14px);
+        background: linear-gradient(45deg, #4CAF50, #45a049);
+      }
+
+      .lang-toggle-switch input[type="checkbox"]:checked + label .vi {
+        color: #eee;
+        opacity: 0.7;
+      }
+
+      .lang-toggle-switch input[type="checkbox"]:checked + label .en {
+        color: #fff;
+        opacity: 1;
+      }
+
+      .lang-toggle-switch input[type="checkbox"]:not(:checked) + label .en {
+        color: #eee;
+        opacity: 0.7;
+      }
+
+      .lang-toggle-switch input[type="checkbox"]:not(:checked) + label .vi {
+        color: #fff;
+        opacity: 1;
+      }
     </style>
   </head>
 
   <body>
+    <div class="lang-toggle-switch">
+      <input type="checkbox" id="langSwitch" />
+      <label for="langSwitch">
+        <span class="lang vi">VI</span>
+        <span class="toggle"></span>
+        <span class="lang en">EN</span>
+      </label>
+    </div>
+
     <!-- API Status Indicator -->
     <div id="apiStatus" class="api-status api-loading">
       <i class="fas fa-circle-notch fa-spin"></i> Đang kiểm tra API...
@@ -842,6 +934,22 @@
           event.preventDefault(); // Prevent the error from appearing in console
         }
       });
+
+      // Tự động set trạng thái toggle theo ngôn ngữ hiện tại
+      document.addEventListener('DOMContentLoaded', function() {
+        const isVietnamese = window.location.pathname.includes('vi');
+        const langSwitch = document.getElementById('langSwitch');
+        if (langSwitch) {
+          langSwitch.checked = !isVietnamese;
+          langSwitch.addEventListener('change', function() {
+            if (langSwitch.checked) {
+              window.location.href = 'index.html'; // Sang tiếng Anh
+            } else {
+              window.location.href = 'index_vi.html'; // Sang tiếng Việt
+            }
+          });
+        }
+      });
     </script>
   </body>
 </html>
@@ -931,12 +1039,12 @@
       <div class="experience-item">
         <h5 class="experience-title">
           <i class="fas fa-university"></i>
-          Lớp học riêng cho sinh viên Đại học Swinburne
+          Kèm 1-1 cho sinh viên Đại học Swinburne
         </h5>
         <p>
-          Đang giảng dạy cho hai sinh viên từ Đại học Swinburne, cung cấp hướng
-          dẫn về các môn học như thuật toán, khái niệm lập trình và phát triển
-          dự án.
+          Kèm 1-1 cho hai sinh viên từ Đại học Swinburne, cung cấp hướng
+          dẫn về các môn học như thuật toán, lập trình hướng đối tượng, cấu
+          trúc dữ liệu, trí tuệ nhân tạo và các môn học khác.
         </p>
       </div>
 
